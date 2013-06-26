@@ -1,0 +1,11 @@
+{
+    "name": "tickspot-api",
+    "version": "0.0.1",
+    "description": "Node wrapper around the Tickspot API",
+    "main": "./lib/tickspot.js",
+    "keywords": [
+        "tickspot",
+        "rest-api"
+    ],
+    "author": "Jason Berry <jason@thevagabond.net>"
+}
