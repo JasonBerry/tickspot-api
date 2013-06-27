@@ -13,5 +13,6 @@
         "tickspot",
         "rest-api"
     ],
-    "author": "Jason Berry <jason@thevagabond.net>"
+    "author": "Jason Berry <jason@thevagabond.net>",
+    "license" : "MIT"
 }
