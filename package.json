@@ -4,10 +4,10 @@
     "description": "Node wrapper around the Tickspot API",
     "main": "./lib/tickspot.js",
     "dependencies": {
-	"request": "~2.21.0",
-	"underscore": "~1.4.4",
-	"xml2js": "~0.2.8",
-	"q": "~0.9.6"
+        "request": "~2.21.0",
+        "underscore": "~1.4.4",
+        "xml2js": "~0.2.8",
+        "q": "~0.9.6"
     },
     "keywords": [
         "tickspot",
