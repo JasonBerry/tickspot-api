@@ -3,11 +3,19 @@
     "version": "0.0.1",
     "description": "Node wrapper around the Tickspot API",
     "main": "./lib/tickspot.js",
+    "scripts": {
+        "test": "mocha test"
+    },
     "dependencies": {
         "request": "~2.21.0",
         "underscore": "~1.4.4",
         "xml2js": "~0.2.8",
         "q": "~0.9.6"
+    },
+    "devDependencies": {
+        "mocha": "~1.11.0",
+        "nock": "~0.18.2",
+        "should": "~1.2.2"
     },
     "keywords": [
         "tickspot",
