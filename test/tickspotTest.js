@@ -66,12 +66,18 @@ describe('Tickspot', function () {
     describe('#clients()', function () {
         var clients = ts.clients();
 
-        it('should return a promise', function () {
+        it('should return a promise', function (done) {
             Q.isPromise(clients).should.be.ok;
+            clients.then(function () {
+                done();
+            });
+        });
+        it('should call a callback function', function (done) {
+            ts.clients(done);
         });
         it('should return an array of clients', function (done) {
             clients.then(function (arr) {
-                arr.clients.client.should.eql([
+                arr.should.eql([
                     {
                         id: '12341',
                         name: 'Starfleet Command'
