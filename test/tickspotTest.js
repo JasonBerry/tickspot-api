@@ -18,7 +18,7 @@ describe('Tickspot', function () {
         });
 
         it('should return a promise', function () {
-            req.should.be.an.instanceof(Q.makePromise);
+            Q.isPromise(req).should.be.ok;
         });
 
         it('should resolve the promise when parseable XML is returned');
@@ -47,7 +47,7 @@ describe('Tickspot', function () {
 
         it('should return a promise', function () {
             var clients = ts.clients();
-            clients.should.be.an.instanceof(Q.makePromise);
+            Q.isPromise(clients).should.be.ok;
         });
     });
 });
