@@ -60,7 +60,6 @@ describe('Tickspot', function () {
                 done();
             });
         });
-        it('should reject the promise when an unexpected statusCode is returned');
     });
 
     describe('#clients()', function () {
