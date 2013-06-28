@@ -10,7 +10,7 @@ describe('Tickspot', function () {
         .post('/api/testAuth', 'email=' + ts.email + '&password=' + ts.password).reply(201, '<foo />')
         .post('/api/okay').reply(201, '<foo />')
         .post('/api/bad').reply(400, 'Bad Request')
-        .post('/api/notXML').reply(201, '<foo')
+        .post('/api/notXML').reply(201, 'foo')
         .post('/api/clients').reply(201, '<?xml version="1.0" encoding="UTF-8"?>\
             <clients type="array">\
               <client>\
