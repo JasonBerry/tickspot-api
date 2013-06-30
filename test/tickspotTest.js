@@ -25,7 +25,66 @@ describe('Tickspot', function () {
                 <id type="integer">12343</id>\
                 <name>The Cardassians</name>\
               </client>\
-            </clients>');
+            </clients>')
+        .post('/api/projects').reply(201, '<?xml version="1.0" encoding="UTF-8"?>\
+            <projects type="array">\
+              <project>\
+                <id type="integer">7</id>\
+                <name>Realign dilithium crystals</name>\
+                <budget type="float">50</budget>\
+                <client_id type="integer">4</client_id>\
+                <owner_id type="integer">14</owner_id>\
+                <opened_on type="date">2006-01-01</opened_on>\
+                <closed_on type="date"></closed_on>\
+                <created_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</created_at>\
+                <updated_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</updated_at>\
+                <client_name>Starfleet Command</client_name>\
+                <sum_hours type="float">22.5</sum_hours>\
+                <user_count type="integer">2</user_count>\
+                <tasks type="array">\
+                  <task>\
+                    <id type="integer">14</id>\
+                    <name>Remove converter assembly</name>\
+                    <position type="integer">1</position>\
+                    <project_id type="integer">2</project_id>\
+                    <opened_on type="date">2006-01-01</opened_on>\
+                    <closed_on type="date"></closed_on>\
+                    <budget type="float">50</budget>\
+                    <billable type="boolean">true</billable>\
+                    <sum_hours type="float">22.5</sum_hours>\
+                    <user_count type="integer">2</user_count>\
+                  </task>\
+                </tasks>\
+              </project>\
+              <project>\
+                <id type="integer">7</id>\
+                <name>Realign dilithium crystals</name>\
+                <budget type="float">50</budget>\
+                <client_id type="integer">4</client_id>\
+                <owner_id type="integer">14</owner_id>\
+                <opened_on type="date">2006-01-01</opened_on>\
+                <closed_on type="date"></closed_on>\
+                <created_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</created_at>\
+                <updated_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</updated_at>\
+                <client_name>Starfleet Command</client_name>\
+                <sum_hours type="float">22.5</sum_hours>\
+                <user_count type="integer">2</user_count>\
+                <tasks type="array">\
+                  <task>\
+                    <id type="integer">14</id>\
+                    <name>Remove converter assembly</name>\
+                    <position type="integer">1</position>\
+                    <project_id type="integer">2</project_id>\
+                    <opened_on type="date">2006-01-01</opened_on>\
+                    <closed_on type="date"></closed_on>\
+                    <budget type="float">50</budget>\
+                    <billable type="boolean">true</billable>\
+                    <sum_hours type="float">22.5</sum_hours>\
+                    <user_count type="integer">2</user_count>\
+                  </task>\
+                </tasks>\
+              </project>\
+            </projects>');
 
     describe('#makeRequest()', function () {
         it('should add email and password to the request', function (done) {
@@ -90,6 +149,26 @@ describe('Tickspot', function () {
                         name: 'The Cardassians'
                     }
                 ]);
+                done();
+            });
+        });
+    });
+
+    describe('#projects()', function () {
+        var projects = ts.projects();
+
+        it('should return a promise', function (done) {
+            Q.isPromise(projects).should.be.ok;
+            projects.then(function () {
+                done();
+            });
+        });
+        it('should call a callback function', function (done) {
+            ts.projects(done);
+        });
+        it('should return an array of projects', function (done) {
+            projects.then(function (arr) {
+                arr.should.be.an.instanceof(Array);
                 done();
             });
         });
