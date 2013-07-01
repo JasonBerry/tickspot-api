@@ -19,7 +19,9 @@
     },
     "keywords": [
         "tickspot",
-        "rest-api"
+        "https",
+        "rest",
+        "api"
     ],
     "author": "Jason Berry <jason@thevagabond.net>",
     "license" : "MIT"
