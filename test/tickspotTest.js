@@ -25,7 +25,7 @@ describe('Tickspot', function () {
     });
 
     describe('#makeRequest()', function () {
-        it('should add email and password to the request', function (done) {
+        it('adds email and password to the request', function (done) {
             var req = ts.makeRequest('testAuth');
             req.then(function () {
                 Q.isFulfilled(req).should.be.ok;
@@ -34,17 +34,17 @@ describe('Tickspot', function () {
         });
 
         var okayRequest = ts.makeRequest('okay');
-        it('should return a promise', function () {
+        it('returns a promise', function () {
             Q.isPromise(okayRequest).should.be.ok;
         });
-        it('should resolve the promise when parseable XML is returned', function (done) {
+        it('resolves the promise when parseable XML is returned', function (done) {
             okayRequest.then(function () {
                 Q.isFulfilled(okayRequest).should.be.ok;
                 done();
             });
         });
 
-        it('should reject the promise when the request returns an error', function (done) {
+        it('rejects the promise when the request returns an error', function (done) {
             var req = ts.makeRequest('bad');
             req.fail(function () {
                 Q.isRejected(req).should.be.ok;
@@ -52,7 +52,7 @@ describe('Tickspot', function () {
             });
         });
 
-        it('should reject the promise when unparseable XML is returned', function (done) {
+        it('rejects the promise when unparseable XML is returned', function (done) {
             var req = ts.makeRequest('notXML');
             req.fail(function () {
                 Q.isRejected(req).should.be.ok;
@@ -62,53 +62,40 @@ describe('Tickspot', function () {
     });
 
     describe('#clients()', function () {
-        it('should call a callback function', function (done) {
+        it('calls a callback function', function (done) {
             fake.post('/api/clients').reply(201, fakeResponses['clients-single']);
             ts.clients(done);
         });
 
-        it('should return a promise', function (done) {
+        it('returns a promise', function (done) {
             fake.post('/api/clients').reply(201, fakeResponses['clients-single']);
             Q.isPromise(ts.clients().then(function () { done(); })).should.be.ok;
         });
 
-        it('should return an array of clients', function (done) {
+        it('resolves with an array of clients', function (done) {
             fake.post('/api/clients').reply(201, fakeResponses['clients-multiple']);
-            ts.clients().then(function (arr) {
-                arr.should.eql([
-                    {
-                        id: '12341',
-                        name: 'Starfleet Command'
-                    },
-                    {
-                        id: '12342',
-                        name: 'The Vulcans'
-                    },
-                    {
-                        id: '12343',
-                        name: 'The Cardassians'
-                    }
-                ]);
+            ts.clients().then(function (clients) {
+                clients.should.be.an.instanceof(Array);
                 done();
             });
         });
     });
 
     describe('#projects()', function () {
-        it('should call a callback function', function (done) {
+        it('calls a callback function', function (done) {
             fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
             ts.projects(done);
         });
 
-        it('should return a promise', function (done) {
+        it('returns a promise', function (done) {
             fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
             Q.isPromise(ts.projects().then(function () { done(); })).should.be.ok;
         });
 
-        it('should return an array of projects', function (done) {
+        it('resolves with an array of projects', function (done) {
             fake.post('/api/projects').reply(201, fakeResponses['projects-multiple']);
-            ts.projects().then(function (arr) {
-                arr.should.be.an.instanceof(Array);
+            ts.projects().then(function (projects) {
+                projects.should.be.an.instanceof(Array);
                 done();
             });
         });
