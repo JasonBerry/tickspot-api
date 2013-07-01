@@ -15,7 +15,7 @@ describe('Tickspot', function () {
 
     before(function (done) {
         var readFile = Q.denodeify(fs.readFile);
-        var responses = ['clients-single', 'clients-multiple', 'projects-single', 'projects-multiple'].map(function (filename) {
+        var responses = ['clients-single', 'clients-multiple', 'projects-single', 'projects-multiple', 'tasks-single', 'tasks-multiple'].map(function (filename) {
             return readFile('./test/sample-responses/' + filename + '.xml', 'utf-8').then(function (data) {
                 fakeResponses[filename] = data;
             });
@@ -110,6 +110,39 @@ describe('Tickspot', function () {
             fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
             ts.projects().then(function (projects) {
                 projects.should.be.an.instanceof(Array);
+                done();
+            });
+        });
+    });
+
+    describe('#tasks()', function () {
+        it('throws an error when project_id isn\'t a number', function () {
+            (function () {
+                ts.tasks();
+            }).should.throwError(/project_id/);
+        });
+
+        it('calls a callback function', function (done) {
+            fake.post('/api/tasks').reply(201, fakeResponses['tasks-single']);
+            ts.tasks(0, done);
+        });
+
+        it('returns a promise', function (done) {
+            fake.post('/api/tasks').reply(201, fakeResponses['tasks-single']);
+            Q.isPromise(ts.tasks(0).then(function () { done(); })).should.be.ok;
+        });
+
+        it('resolves with an array of tasks when response contains multiple tasks', function (done) {
+            fake.post('/api/tasks').reply(201, fakeResponses['tasks-multiple']);
+            ts.tasks(0).then(function (tasks) {
+                tasks.should.be.an.instanceof(Array);
+                done();
+            });
+        });
+        it('resolves with an array of tasks when response contains a single task', function (done) {
+            fake.post('/api/tasks').reply(201, fakeResponses['tasks-single']);
+            ts.tasks(0).then(function (tasks) {
+                tasks.should.be.an.instanceof(Array);
                 done();
             });
         });

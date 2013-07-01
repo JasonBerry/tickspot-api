@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tasks type="array">
+  <task>
+    <id type="integer">14</id>
+    <name>Remove converter assembly</name>
+    <position type="integer">1</position>
+    <project_id type="integer">2</project_id>
+    <opened_on type="date">2006-01-01</opened_on>
+    <closed_on type="date"></closed_on>
+    <budget type="float">50</budget>
+    <billable type="boolean">true</billable>
+    <sum_hours type="float">22.5</sum_hours>
+    <user_count type="integer">2</user_count>
+  </task>
+</tasks>
