@@ -72,8 +72,15 @@ describe('Tickspot', function () {
             Q.isPromise(ts.clients().then(function () { done(); })).should.be.ok;
         });
 
-        it('resolves with an array of clients', function (done) {
+        it('resolves with an array of clients when response contains multiple clients', function (done) {
             fake.post('/api/clients').reply(201, fakeResponses['clients-multiple']);
+            ts.clients().then(function (clients) {
+                clients.should.be.an.instanceof(Array);
+                done();
+            });
+        });
+        it('resolves with an array of clients when response contains a single client', function (done) {
+            fake.post('/api/clients').reply(201, fakeResponses['clients-single']);
             ts.clients().then(function (clients) {
                 clients.should.be.an.instanceof(Array);
                 done();
@@ -92,8 +99,15 @@ describe('Tickspot', function () {
             Q.isPromise(ts.projects().then(function () { done(); })).should.be.ok;
         });
 
-        it('resolves with an array of projects', function (done) {
+        it('resolves with an array of projects when response contains multiple projects', function (done) {
             fake.post('/api/projects').reply(201, fakeResponses['projects-multiple']);
+            ts.projects().then(function (projects) {
+                projects.should.be.an.instanceof(Array);
+                done();
+            });
+        });
+        it('resolves with an array of projects when response contains a single project', function (done) {
+            fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
             ts.projects().then(function (projects) {
                 projects.should.be.an.instanceof(Array);
                 done();
