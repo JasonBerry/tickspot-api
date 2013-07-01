@@ -15,7 +15,7 @@ describe('Tickspot', function () {
 
     before(function (done) {
         var readFile = Q.denodeify(fs.readFile);
-        var responses = ['clients-single', 'clients-multiple', 'projects-single', 'projects-multiple', 'tasks-single', 'tasks-multiple'].map(function (filename) {
+        var responses = ['clients-single', 'clients-multiple', 'projects-single', 'projects-multiple', 'tasks-single', 'tasks-multiple', 'clients-projects-tasks'].map(function (filename) {
             return readFile('./test/sample-responses/' + filename + '.xml', 'utf-8').then(function (data) {
                 fakeResponses[filename] = data;
             });
@@ -160,4 +160,29 @@ describe('Tickspot', function () {
             });
         });
     });
+    
+    describe('#clientsProjectsTasks()', function () {
+        it('calls a callback function', function (done) {
+            fake.post('/api/clients_projects_tasks').reply(201, fakeResponses['clients-projects-tasks']);
+            ts.clientsProjectsTasks(done);
+        });
+
+        it('returns a promise', function (done) {
+            fake.post('/api/clients_projects_tasks').reply(201, fakeResponses['clients-projects-tasks']);
+            Q.isPromise(ts.clientsProjectsTasks().then(function () { done(); })).should.be.ok;
+        });
+
+        it('resolves with an array of clients, who have an array of projects, who have an array of tasks', function (done) {
+            fake.post('/api/clients_projects_tasks').reply(201, fakeResponses['clients-projects-tasks']);
+            ts.clientsProjectsTasks().then(function (clients) {
+                clients.should.be.an.instanceof(Array);
+                clients.length.should.eql(3);
+                clients[0].projects.should.be.an.instanceof(Array);
+                clients[0].projects.length.should.eql(2);
+                clients[0].projects[0].tasks.should.be.an.instanceof(Array);
+                clients[0].projects[0].tasks.length.should.eql(2);
+                done();
+            });
+        });
+    })
 });
