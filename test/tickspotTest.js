@@ -24,6 +24,19 @@ describe('Tickspot', function () {
         Q.all(responses).then(function () { done(); });
     });
 
+    describe('#_ensureArrayWrap()', function () {
+        it('doesn\'t wrap array input in a second array', function () {
+            var myArr = ['blah'];
+            ts._ensureArrayWrap(myArr).should.eql(myArr);
+        });
+        it('wraps non-array input in an array', function () {
+            ts._ensureArrayWrap('abc').should.eql(['abc']);
+            ts._ensureArrayWrap(123).should.eql([123]);
+            ts._ensureArrayWrap(true).should.eql([true]);
+            ts._ensureArrayWrap({ 'foo': 'bar' }).should.eql([{ 'foo': 'bar' }]);
+        });
+    })
+
     describe('#makeRequest()', function () {
         it('adds email and password to the request', function (done) {
             var req = ts.makeRequest('testAuth');
