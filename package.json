@@ -21,6 +21,9 @@
     "type": "git",
     "url": "git://github.com/JasonBerry/tickspot-api.git"
   },
+  "bugs": {
+    "url": "https://github.com/JasonBerry/tickspot-api/issues"
+  },
   "keywords": [
     "tickspot",
     "https",
