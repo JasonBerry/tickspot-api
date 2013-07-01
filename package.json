@@ -1,32 +1,37 @@
 {
-    "name": "tickspot-api",
-    "version": "0.0.1",
-    "description": "Node wrapper around the Tickspot API",
-    "main": "./lib/tickspot.js",
-    "scripts": {
-        "test": "mocha test"
-    },
-    "dependencies": {
-        "request": "~2.21.0",
-        "underscore": "~1.4.4",
-        "xml2js": "~0.2.8",
-        "q": "~0.9.6"
-    },
-    "devDependencies": {
-        "mocha": "~1.11.0",
-        "nock": "~0.18.2",
-        "should": "~1.2.2"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/JasonBerry/tickspot-api.git"
-    },
-    "keywords": [
-        "tickspot",
-        "https",
-        "rest",
-        "api"
-    ],
-    "author": "Jason Berry <jason@thevagabond.net>",
-    "license" : "MIT"
+  "name": "tickspot-api",
+  "version": "0.0.0",
+  "description": "Node wrapper around the Tickspot API",
+  "main": "./lib/tickspot.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "dependencies": {
+    "request": "~2.21.0",
+    "underscore": "~1.4.4",
+    "xml2js": "~0.2.8",
+    "q": "~0.9.6"
+  },
+  "devDependencies": {
+    "mocha": "~1.11.0",
+    "nock": "~0.18.2",
+    "should": "~1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/JasonBerry/tickspot-api.git"
+  },
+  "keywords": [
+    "tickspot",
+    "https",
+    "rest",
+    "api"
+  ],
+  "author": "Jason Berry <jason@thevagabond.net>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
 }
