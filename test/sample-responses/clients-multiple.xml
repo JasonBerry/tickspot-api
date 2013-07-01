@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clients type="array">
+  <client>
+    <id type="integer">12341</id>
+    <name>Starfleet Command</name>
+  </client>
+  <client>
+    <id type="integer">12342</id>
+    <name>The Vulcans</name>
+  </client>
+  <client>
+    <id type="integer">12343</id>
+    <name>The Cardassians</name>
+  </client>
+</clients>

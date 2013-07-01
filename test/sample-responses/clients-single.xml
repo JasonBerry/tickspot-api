@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clients type="array">
+  <client>
+    <id type="integer">12341</id>
+    <name>Starfleet Command</name>
+  </client>
+</clients>

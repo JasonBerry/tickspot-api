@@ -1,90 +1,28 @@
 var Tickspot = require('../lib/tickspot'),
     nock = require('nock'),
     Q = require('q'),
-    should = require('should');
+    should = require('should'),
+    fs = require('fs');
 
 describe('Tickspot', function () {
     var ts = new Tickspot('mycompany', 'myemail', 'mypassword');
-    nock(ts.host)
-        .persist()
+    var fakeResponses = {};
+    var fake = nock(ts.host)
         .post('/api/testAuth', 'email=' + ts.email + '&password=' + ts.password).reply(201, '<foo />')
         .post('/api/okay').reply(201, '<foo />')
         .post('/api/bad').reply(400, 'Bad Request')
-        .post('/api/notXML').reply(201, 'foo')
-        .post('/api/clients').reply(201, '<?xml version="1.0" encoding="UTF-8"?>\
-            <clients type="array">\
-              <client>\
-                <id type="integer">12341</id>\
-                <name>Starfleet Command</name>\
-              </client>\
-              <client>\
-                <id type="integer">12342</id>\
-                <name>The Vulcans</name>\
-              </client>\
-              <client>\
-                <id type="integer">12343</id>\
-                <name>The Cardassians</name>\
-              </client>\
-            </clients>')
-        .post('/api/projects').reply(201, '<?xml version="1.0" encoding="UTF-8"?>\
-            <projects type="array">\
-              <project>\
-                <id type="integer">7</id>\
-                <name>Realign dilithium crystals</name>\
-                <budget type="float">50</budget>\
-                <client_id type="integer">4</client_id>\
-                <owner_id type="integer">14</owner_id>\
-                <opened_on type="date">2006-01-01</opened_on>\
-                <closed_on type="date"></closed_on>\
-                <created_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</created_at>\
-                <updated_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</updated_at>\
-                <client_name>Starfleet Command</client_name>\
-                <sum_hours type="float">22.5</sum_hours>\
-                <user_count type="integer">2</user_count>\
-                <tasks type="array">\
-                  <task>\
-                    <id type="integer">14</id>\
-                    <name>Remove converter assembly</name>\
-                    <position type="integer">1</position>\
-                    <project_id type="integer">2</project_id>\
-                    <opened_on type="date">2006-01-01</opened_on>\
-                    <closed_on type="date"></closed_on>\
-                    <budget type="float">50</budget>\
-                    <billable type="boolean">true</billable>\
-                    <sum_hours type="float">22.5</sum_hours>\
-                    <user_count type="integer">2</user_count>\
-                  </task>\
-                </tasks>\
-              </project>\
-              <project>\
-                <id type="integer">7</id>\
-                <name>Realign dilithium crystals</name>\
-                <budget type="float">50</budget>\
-                <client_id type="integer">4</client_id>\
-                <owner_id type="integer">14</owner_id>\
-                <opened_on type="date">2006-01-01</opened_on>\
-                <closed_on type="date"></closed_on>\
-                <created_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</created_at>\
-                <updated_at type="datetime">Tue, 07 Oct 2008 14:46:16 -0400</updated_at>\
-                <client_name>Starfleet Command</client_name>\
-                <sum_hours type="float">22.5</sum_hours>\
-                <user_count type="integer">2</user_count>\
-                <tasks type="array">\
-                  <task>\
-                    <id type="integer">14</id>\
-                    <name>Remove converter assembly</name>\
-                    <position type="integer">1</position>\
-                    <project_id type="integer">2</project_id>\
-                    <opened_on type="date">2006-01-01</opened_on>\
-                    <closed_on type="date"></closed_on>\
-                    <budget type="float">50</budget>\
-                    <billable type="boolean">true</billable>\
-                    <sum_hours type="float">22.5</sum_hours>\
-                    <user_count type="integer">2</user_count>\
-                  </task>\
-                </tasks>\
-              </project>\
-            </projects>');
+        .post('/api/notXML').reply(201, 'foo');
+
+    before(function (done) {
+        var readFile = Q.denodeify(fs.readFile);
+        var responses = ['clients-single', 'clients-multiple', 'projects-single', 'projects-multiple'].map(function (filename) {
+            return readFile('./test/sample-responses/' + filename + '.xml', 'utf-8').then(function (data) {
+                fakeResponses[filename] = data;
+            });
+        });
+
+        Q.all(responses).then(function () { done(); });
+    });
 
     describe('#makeRequest()', function () {
         it('should add email and password to the request', function (done) {
@@ -94,16 +32,18 @@ describe('Tickspot', function () {
                 done();
             });
         });
+
+        var okayRequest = ts.makeRequest('okay');
         it('should return a promise', function () {
-            Q.isPromise(ts.makeRequest('okay')).should.be.ok;
+            Q.isPromise(okayRequest).should.be.ok;
         });
         it('should resolve the promise when parseable XML is returned', function (done) {
-            var req = ts.makeRequest('okay');
-            req.then(function () {
-                Q.isFulfilled(req).should.be.ok;
+            okayRequest.then(function () {
+                Q.isFulfilled(okayRequest).should.be.ok;
                 done();
             });
         });
+
         it('should reject the promise when the request returns an error', function (done) {
             var req = ts.makeRequest('bad');
             req.fail(function () {
@@ -122,19 +62,19 @@ describe('Tickspot', function () {
     });
 
     describe('#clients()', function () {
-        var clients = ts.clients();
-
-        it('should return a promise', function (done) {
-            Q.isPromise(clients).should.be.ok;
-            clients.then(function () {
-                done();
-            });
-        });
         it('should call a callback function', function (done) {
+            fake.post('/api/clients').reply(201, fakeResponses['clients-single']);
             ts.clients(done);
         });
+
+        it('should return a promise', function (done) {
+            fake.post('/api/clients').reply(201, fakeResponses['clients-single']);
+            Q.isPromise(ts.clients().then(function () { done(); })).should.be.ok;
+        });
+
         it('should return an array of clients', function (done) {
-            clients.then(function (arr) {
+            fake.post('/api/clients').reply(201, fakeResponses['clients-multiple']);
+            ts.clients().then(function (arr) {
                 arr.should.eql([
                     {
                         id: '12341',
@@ -155,19 +95,19 @@ describe('Tickspot', function () {
     });
 
     describe('#projects()', function () {
-        var projects = ts.projects();
-
-        it('should return a promise', function (done) {
-            Q.isPromise(projects).should.be.ok;
-            projects.then(function () {
-                done();
-            });
-        });
         it('should call a callback function', function (done) {
+            fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
             ts.projects(done);
         });
+
+        it('should return a promise', function (done) {
+            fake.post('/api/projects').reply(201, fakeResponses['projects-single']);
+            Q.isPromise(ts.projects().then(function () { done(); })).should.be.ok;
+        });
+
         it('should return an array of projects', function (done) {
-            projects.then(function (arr) {
+            fake.post('/api/projects').reply(201, fakeResponses['projects-multiple']);
+            ts.projects().then(function (arr) {
                 arr.should.be.an.instanceof(Array);
                 done();
             });
