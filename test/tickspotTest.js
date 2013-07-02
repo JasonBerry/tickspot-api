@@ -35,7 +35,7 @@ describe('Tickspot', function () {
             ts._ensureArrayWrap(true).should.eql([true]);
             ts._ensureArrayWrap({ 'foo': 'bar' }).should.eql([{ 'foo': 'bar' }]);
         });
-    })
+    });
 
     describe('#makeRequest()', function () {
         it('adds email and password to the request', function (done) {
@@ -184,5 +184,5 @@ describe('Tickspot', function () {
                 done();
             });
         });
-    })
+    });
 });
