@@ -37,6 +37,26 @@ describe('Tickspot', function () {
         });
     });
 
+    describe('#_pad()', function () {
+        it('pads values with leading zeroes', function () {
+            ts._pad(5, 2).should.eql('05');
+            ts._pad(15, 2).should.eql('15');
+        });
+        it('doesn\'t truncate numbers bigger than the supplied size', function () {
+            ts._pad(1234, 2).should.eql('1234');
+        });
+    });
+
+    describe('#_ensureDateString()', function () {
+        it('doesn\'t touch a normal date-as-string', function () {
+            var myDateString = '2013-07-27';
+            ts._ensureDateString(myDateString).should.eql(myDateString);
+        });
+        it('converts a date to a string representation of that date', function () {
+            ts._ensureDateString(new Date(2013, 7, 27)).should.eql('2013-07-27');
+        });
+    });
+
     describe('#makeRequest()', function () {
         it('adds email and password to the request', function (done) {
             var req = ts.makeRequest('testAuth');
