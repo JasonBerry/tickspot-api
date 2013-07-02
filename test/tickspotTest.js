@@ -205,4 +205,52 @@ describe('Tickspot', function () {
             });
         });
     });
+
+    describe('#entries()', function () {
+        var fakeEntriesResponse = '<entries></entries>';
+        it('throws an error when start_date isn\'t a date/string', function () {
+            (function () {
+                ts.entries();
+            }).should.throwError(/start_date/);
+        });
+        it('does not throw an error when start_date is a date', function (done) {
+            (function () {
+                fake.post('/api/entries').reply(201, fakeEntriesResponse);
+                ts.entries(new Date(2013, 1, 1), done);
+            }).should.not.throwError(/start_date/);
+        });
+        it('throws an error when end_date isn\'t a date/string', function () {
+            (function () {
+                ts.entries(new Date(2013, 1, 1), {}, {}, function () {});
+            }).should.throwError(/end_date/);
+        });
+        it('does not throw an error when end_date is a date', function (done) {
+            (function () {
+                fake.post('/api/entries').reply(201, fakeEntriesResponse);
+                ts.entries(new Date(2013, 1, 1), new Date(2013, 1, 31), done);
+            }).should.not.throwError(/end_date/);
+        });
+
+        it('calls a callback function', function (done) {
+            fake.post('/api/entries').reply(201, fakeEntriesResponse);
+            ts.entries(new Date(2013, 1, 1), done);
+        });
+
+        it('returns a promise', function (done) {
+            fake.post('/api/entries').reply(201, fakeEntriesResponse);
+            Q.isPromise(ts.entries(new Date(2013, 1, 1)).then(function () { done(); })).should.be.ok;
+        });
+
+        it('sends start_date param if end_date is supplied', function (done) {
+            var startDate = '2013-01-01';
+            var endDate = '2013-01-31';
+            fake.post('/api/entries', 'email=' + ts.email + '&password=' + ts.password + '&start_date=' + startDate + '&end_date=' + endDate).reply(201, fakeEntriesResponse);
+            ts.entries(startDate, endDate, done);
+        });
+        it('sends updated_at param if end_date is not supplied', function (done) {
+            var updatedAt = '2013-01-01';
+            fake.post('/api/entries', 'email=' + ts.email + '&password=' + ts.password + '&updated_at=' + updatedAt).reply(201, fakeEntriesResponse);
+            ts.entries(updatedAt, done);
+        });
+    });
 });
