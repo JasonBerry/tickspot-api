@@ -53,7 +53,7 @@ describe('Tickspot', function () {
             ts._ensureDateString(myDateString).should.eql(myDateString);
         });
         it('converts a date to a string representation of that date', function () {
-            ts._ensureDateString(new Date(2013, 7, 27)).should.eql('2013-07-27');
+            ts._ensureDateString(new Date(2013, 6, 27)).should.eql('2013-07-27');
         });
     });
 
